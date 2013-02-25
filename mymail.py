@@ -71,19 +71,19 @@ def main():
     if parms[0] == 'piped':
         for inline in sys.stdin.readlines():
             for email in get_email(inline):
-                print >>outtype, email
+                print >>outfile, email
     else:
         try:
             url = urllib2.urlopen(parms[0])
             for inline in url:
                 for email in get_email(inline):
-                    print >>outtype, email
+                    print >>outfile, email
         except ValueError, urllib2.URLError:
             try:
                 fname = open(parms[0], 'r')
                 for inline in fname:
                     for email in get_email(inline):
-                        print >>outtype, email
+                        print >>outfile, email
             except IOError as e:
                 print 'Error: input file not found'
                 print './mymail.py -h for usage'

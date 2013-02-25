@@ -70,7 +70,7 @@ class testParmDetect(unittest.TestCase):
 
     def testPipedOK(self):
         """Check piped input is detected"""
-        cmd = './mymail.py < mymail.testdata.txt'
+        cmd = './mymail.py < mymail.txt'
         result = subprocess.Popen(cmd, stdout=subprocess.PIPE, 
                                        stderr=subprocess.PIPE, shell=True)
         stdout, stderr = result.communicate()
@@ -78,7 +78,7 @@ class testParmDetect(unittest.TestCase):
 
     def testOtherPipedOK(self):
         """Check piped input is with | works"""
-        cmd = 'cat mymail.testdata.txt | ./mymail.py'
+        cmd = 'cat mymail.txt | ./mymail.py'
         result = subprocess.Popen(cmd, stdout=subprocess.PIPE, 
                                        stderr=subprocess.PIPE, shell=True)
         stdout, stderr = result.communicate()
@@ -86,7 +86,7 @@ class testParmDetect(unittest.TestCase):
 
     def testGetParm(self):
         """Check if module detects parameters"""
-        cmd = './mymail.py mymail.testdata.txt'
+        cmd = './mymail.py mymail.txt'
         result = subprocess.Popen(cmd, stdout=subprocess.PIPE, 
                                        stderr=subprocess.PIPE, shell=True)
         stdout, stderr = result.communicate()
@@ -94,15 +94,19 @@ class testParmDetect(unittest.TestCase):
 
     def testGetParmWithFile(self):
         """Check if module detects if create parameter"""
-        cmd = './mymail.py -f outfile mymail.testdata.txt'
+        cmd = './mymail.py -f outfile mymail.txt'
         result = subprocess.Popen(cmd, stdout=subprocess.PIPE, 
                                        stderr=subprocess.PIPE, shell=True)
         stdout, stderr = result.communicate()
-        self.assertEqual(stderr, '')
-
-    def testFileExists(self):
         self.assertTrue(os.path.exists('outfile'))
-        os.remove('outfile')
+
+    def testOutfileHasData(self):
+        """Count file output to check not an empty file"""
+        linecount = 0
+        for line in open('outfile'):
+            linecount +=1
+        self.assertTrue(linecount > 0)
+
 
 class testParmManagement(unittest.TestCase):
 
