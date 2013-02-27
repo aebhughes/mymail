@@ -58,6 +58,10 @@ def output_method(p_list):
         out_method = sys.stdout
     return out_method, p_list
         
+def display_output(f_obj, out_type):
+    for inline in f_obj.readlines():
+        for email in get_email(inline):
+            print >>out_type, email
 
 def main():
     """main process: Determine between piped input, file input or URL
@@ -69,21 +73,15 @@ def main():
         print 'Error: no valid input found: run ./mymail.py -h for options'
         sys.exit(1)
     if parms[0] == 'piped':
-        for inline in sys.stdin.readlines():
-            for email in get_email(inline):
-                print >>outfile, email
+        display_output(sys.stdin, outfile)
     else:
         try:
             url = urllib2.urlopen(parms[0])
-            for inline in url:
-                for email in get_email(inline):
-                    print >>outfile, email
+            display_output(url, outfile)
         except ValueError, urllib2.URLError:
             try:
                 fname = open(parms[0], 'r')
-                for inline in fname:
-                    for email in get_email(inline):
-                        print >>outfile, email
+                display_output(fname, outfile)
             except IOError as e:
                 print 'Error: input file not found'
                 print './mymail.py -h for usage'
