@@ -61,7 +61,8 @@ def output_method(p_list):
 def display_output(f_obj, out_type):
     for inline in f_obj.readlines():
         for email in get_email(inline):
-            print >>out_type, email
+            email += '\n'
+            out_type.writelines(email)
 
 def main():
     """main process: Determine between piped input, file input or URL
